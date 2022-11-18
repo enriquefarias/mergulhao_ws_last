@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+<!-- Robot pose -->
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
+  <arg name="roll" default="0"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw" default="0"/>
+
+  <!-- Launch other relevant files-->
+  <include file="$(find mergulhao)/launch/robot_description.launch"/>
+
+  <!-- World File -->
+  <arg name="world_file" default="$(find mergulhao)/worlds/ocean_waves.world"/>
+
+  <!-- Launch Gazebo World -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="use_sim_time" value="true"/>
+    <arg name="debug" value="false"/>
+    <arg name="gui" value="true" />
+    <arg name="world_name" value="$(arg world_file)"/>
+  </include>
+  <!-- Find my robot Description-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find mergulhao)/urdf/mergulhao.xacro'"/>
+
+  <!-- Spawn My Robot -->
+  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+        args="-urdf -param robot_description -model mergulhao 
+              -x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+  <!--PLUG-IN-->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find mergulhao)/rviz/mergulhao.rviz" required="true"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+    <arg name="gui" default="true"/>
+    <arg name="paused" default="false"/>
+    <arg name="set_timeout" default="false"/>
+    <arg name="timeout" default="0.0"/>
+
+
+
+    <include file="$(find uuv_assistants)/launch/publish_world_ned_frame.launch"/>
+    
+    <node name="publish_world_models"
+        pkg="uuv_assistants"
+        type="publish_world_models.py"
+        output="screen">
+        <rosparam subst_value="true">
+            meshes:
+                heightmap:
+                    mesh: package://uuv_gazebo_worlds/models/sand_heightmap/meshes/heightmap.dae
+                    model: sand_heightmap
+                seafloor:
+                    plane: [2000, 2000, 0.1]
+                    pose:
+                        position: [0, 0, -100]
+                north:
+                    plane: [0.1, 2000, 100]
+                    pose:
+                        position: [1000, 0, -50]
+                south:
+                    plane: [0.1, 2000, 100]
+                    pose:
+                        position: [-1000, 0, -50]
+                west:
+                    plane: [2000, 0.1, 100]
+                    pose:
+                        position: [0, -1000, -50]
+                east:
+                    plane: [2000, 0.1, 100]
+                    pose:
+                        position: [0, 1000, -50]
+        </rosparam>
+    </node>
+
+    <group if="$(arg set_timeout)">
+        <include file="$(find uuv_assistants)/launch/set_simulation_timer.launch">
+            <arg name="timeout" value="$(arg timeout)"/>
+        </include>
+    </group>
+</launch>

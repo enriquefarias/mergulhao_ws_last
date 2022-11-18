@@ -1,0 +1,4515 @@
+<?xml version='1.0'?>
+
+<robot name="mergulhao" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<!--<xacro:include filename="$(find mergulhao)/urdf/mergulhao.gazebo"/>-->
+<xacro:include filename="$(find mergulhao)/urdf/mergulhao.plugins.xacro" />
+<xacro:include filename="$(find mergulhao)/urdf/materials.xacro"/>
+
+<!--Buoyancy plugin-->
+  <gazebo>
+        <plugin name="buoyancy_mergulhao" filename="libBuoyancyPlugin.so">
+        <!--fluid_density>268.365</fluid_density-->  
+        <fluid_density>1000</fluid_density>
+        </plugin>
+  </gazebo>
+
+
+<!--Thruster plugin-->
+ <gazebo>
+   <plugin filename="ignition-gazebo-thruster-system" name="ignition::gazebo::systems::Thruster">
+    <namespace>tethys</namespace>
+    <joint_name>thuster_base_thruster_helice</joint_name>
+    <thrust_coefficient>0.004422</thrust_coefficient>
+    <fluid_density>500</fluid_density>
+    <propeller_diameter>76.2</propeller_diameter>
+    </plugin>
+ </gazebo>
+
+
+<gazebo>
+  <plugin filename="ignition-gazebo-hydrodynamics-system" name="ignition::gazebo::systems::Hydrodynamics">
+    <link_name>casco</link_name>
+    <xDotU>-4.876161</xDotU>
+    <yDotV>-126.324739</yDotV>
+    <zDotW>-126.324739</zDotW>
+    <kDotP>0</kDotP>
+    <mDotQ>-33.46</mDotQ>
+    <nDotR>-33.46</nDotR>
+    <xUU>-6.2282</xUU>
+    <xU>0</xU>
+    <yVV>-601.27</yVV>
+    <yV>0</yV>
+    <zWW>-601.27</zWW>
+    <zW>0</zW>
+    <kPP>-0.1916</kPP>
+    <kP>0</kP>
+    <mQQ>-632.698957</mQQ>
+    <mQ>0</mQ>
+    <nRR>-632.698957</nRR>
+    <nR>0</nR>
+  </plugin>
+</gazebo>
+
+ <plugin filename="ignition-gazebo-lift-drag-system" name="ignition::gazebo::systems::LiftDrag">
+    <air_density>1000</air_density>
+    <cla>4.13</cla>
+    <cla_stall>-1.1</cla_stall>
+    <cda>0.2</cda>
+    <cda_stall>0.03</cda_stall>
+    <alpha_stall>0.17</alpha_stall>
+    <a0>0</a0>
+    <area>0.0244</area>
+    <upward>0 1 0</upward>
+    <forward>1 0 0</forward>
+    <link_name>flap</link_name>
+    <cp>0 0 0</cp>
+ </plugin>
+
+ <plugin filename="ignition-gazebo-lift-drag-system" name="ignition::gazebo::systems::LiftDrag">
+    <air_density>1000</air_density>
+    <cla>4.13</cla>
+    <cla_stall>-1.1</cla_stall>
+    <cda>0.2</cda>
+    <cda_stall>0.03</cda_stall>
+    <alpha_stall>0.17</alpha_stall>
+    <a0>0</a0>
+    <area>0.0244</area>
+    <upward>0 1 0</upward>
+    <forward>1 0 0</forward>
+    <link_name>flap_2</link_name>
+    <cp>0 0 0</cp>
+ </plugin>
+
+ <!--                GAZEBO RELATED PART                             -->
+
+  <!-- ROS Control plugin for Gazebo -->
+  <!--gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/simple_model</robotNamespace>
+    </plugin>
+  </gazebo-->
+
+  <!-- transmission -->
+  <!--transmission name="base_to_second_trans">
+    <type>transmission_interface/SimpleTransmission</type>
+    <actuator name="motor1">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+    <joint name="flap_l">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+  </transmission-->
+
+
+<!--plugin name="cessna_control" filename="libCessnaPlugin.so">
+    <propeller>cessna_c172::thuster_base_thruster_helice</propeller>
+    <propeller_max_rpm>2500</propeller_max_rpm>
+    <left_aileron>cessna_c172::left_aileron_joint</left_aileron>
+    <left_flap>cessna_c172::flap_l</left_flap>
+    <right_aileron>cessna_c172::right_aileron_joint</right_aileron>
+    <right_flap>cessna_c172::flap_r</right_flap>
+    <rudder>cessna_c172::rudder</rudder>
+</plugin-->
+
+<!--joint name="thuster_base_thruster_helice" type="continuous">
+<origin xyz="2.98752e-18 -0.0317518 -0.049" rpy="1.5708 -5.47382e-46 -9.36409e-32" />
+<parent link="thruster_base" />
+<child link="thruster_helice" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="0" upper="6.28319"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="camera_link">
+<visual>
+<origin xyz="0 0 -0.001" rpy="1.5708 4.59801e-46 1" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/camera_link.stl"/>
+</geometry>
+<material name="camera_link_material">
+<color rgba="0.980392 0.796078 0.262745 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.001" rpy="1.5708 4.59801e-46 1" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/camera_link.stl"/>
+</geometry>
+<material name="camera_link_material">
+<color rgba="0.980392 0.796078 0.262745 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-6.56859e-50 2.54278e-19 -0.0005" rpy="0 0 0"/>
+<mass value="3.27934e-05" />
+<inertia ixx="8.4081e-11" ixy="0"  ixz="-6.00342e-56" iyy="8.4081e-11" iyz="0" izz="1.62696e-10" />
+</inertial>
+</link>
+
+<joint name="camera_link_camera" type="fixed">
+<origin xyz="-0.014 -0.014 -0.02335" rpy="0 1.57 0" />
+<parent link="caixa_camera" />
+<child link="camera_link" />
+<axis xyz="0 0 0"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+<joint name="camera_suporte_camera" type="fixed">
+<origin xyz="-0.0139844 -0.0271614 0.0594559" rpy="1.5708 -0 -3.14159" />
+<parent link="suporte_camera" />
+<child link="caixa_camera" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint-->
+
+
+<gazebo reference="casco">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo> 
+
+<gazebo reference="tampa_casco">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo> 
+
+
+<gazebo reference="suporte_seringas">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo> 
+
+<gazebo reference="suporte_seringas_2">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo> 
+
+<gazebo reference="fio_thruster">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="bateria">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="nut_sonar">
+   <material>
+      Gazebo/Red
+    </material>
+</gazebo> 
+
+<gazebo reference="nut_thruster">
+   <material>
+      Gazebo/Red
+    </material>
+</gazebo>
+
+<gazebo reference="penetrator_sonar">
+   <material>
+      Gazebo/Red
+    </material>
+</gazebo> 
+
+<gazebo reference="penetrator_thruster">
+   <material>
+      Gazebo/Red
+    </material>
+</gazebo> 
+
+<gazebo reference="flap">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="caixa_camera">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+
+<gazebo reference="peca_flap">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="flap_2">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="peca_rudder">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo>
+
+<gazebo reference="rudder">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo>
+
+<gazebo reference="peca_flap_2">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="sonar_ping360">
+   <material>
+      Gazebo/Black   
+    </material>
+</gazebo> 
+
+<gazebo reference="thruster_helice">
+   <material>
+      Gazebo/Blue
+    </material>
+</gazebo> 
+
+<gazebo reference="thruster_base">
+   <material>
+      Gazebo/Black
+    </material>
+</gazebo> 
+
+<gazebo reference="dome">
+   <material>
+      Gazebo/GreyTransparent
+    </material>
+</gazebo> 
+
+<gazebo reference="seringa">
+   <material>
+      Gazebo/BlueTransparent
+    </material>
+</gazebo> 
+
+<gazebo reference="camera">
+   <material>
+      Gazebo/DarkGrey     
+    </material>
+</gazebo> 
+
+<gazebo reference="suporte_camera">
+   <material>
+      Gazebo/White
+    </material>
+</gazebo>
+
+<gazebo reference="parafuso">
+   <material>
+      PR2/Grey1
+    </material>
+</gazebo> 
+
+<gazebo reference="parafuso_2">
+   <material>
+      PR2/Grey2
+    </material>
+</gazebo> 
+
+<gazebo reference="parafuso_3">
+   <material>
+      PR2/Grey3
+    </material>
+</gazebo> 
+
+<gazebo reference="parafuso_4">
+   <material>
+      PR2/Grey1
+    </material>
+</gazebo> 
+
+<gazebo reference="suporte_dome">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo> 
+
+<gazebo reference="tampa_bateria">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo> 
+
+<gazebo reference="peca_eixo">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo>
+
+<gazebo reference="peca_eixo_2">
+   <material>
+      Gazebo/Yellow
+    </material>
+</gazebo>
+
+<gazebo reference="eixo_flap">
+   <material>
+      Gazebo/Grey
+    </material>
+</gazebo>
+
+<gazebo reference="eixo_flap_2">
+   <material>
+      Gazebo/Grey
+    </material>
+</gazebo>
+
+<gazebo reference="eixo_flap_base">
+   <material>
+      Gazebo/Grey 
+    </material>
+</gazebo>
+
+<gazebo reference="eixo_flap_base_2">
+   <material>
+      Gazebo/Grey
+    </material>
+</gazebo>
+
+<gazebo reference="gaxeta">
+   <material>
+      Gazebo/Grey
+    </material>
+</gazebo>
+
+<gazebo reference="gaxeta_2">
+   <material>
+      Gazebo/Grey
+    </material>
+</gazebo>
+
+<gazebo reference="borracha_eixo2_2">
+   <material>
+      Gazebo/White
+    </material>
+</gazebo>
+
+<gazebo reference="borracha_eixo2">
+   <material>
+      Gazebo/White
+    </material>
+</gazebo>
+
+<gazebo reference="apc220">
+   <material>
+      Gazebo/Black  
+    </material>
+</gazebo> 
+
+<link name="base_footprint" />
+
+<joint name="base_footprint_joint" type="fixed">
+  <parent link="base_footprint" />
+  <child link="casco" />
+</joint>
+
+<link name="casco">
+<visual>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/casco.stl"/>
+</geometry>
+<material name="casco_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/casco.stl"/>
+</geometry>
+<material name="casco_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.0274049 1.10869e-05 -0.0536375" rpy="0 0 0"/>
+<mass value="0.965783" />
+<inertia ixx="0.00344773" ixy="2.80588e-06"  ixz="0.0001501" iyy="0.0116526" iyz="-4.27059e-07" izz="0.0123285" />
+</inertial>
+</link>
+
+<link name="nut_sonar">
+<visual>
+<origin xyz="-0.000226036 -2.95444e-05 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/nut_sonar.stl"/>
+</geometry>
+<material name="nut_sonar_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.000226036 -2.95444e-05 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/nut_sonar.stl"/>
+</geometry>
+<material name="nut_sonar_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.000220262 -3.69763e-05 -0.00399998" rpy="0 0 0"/>
+<mass value="0.00367746" />
+<inertia ixx="1.00976e-07" ixy="-4.38025e-15"  ixz="5.75411e-11" iyy="1.12562e-07" iyz="4.46138e-11" izz="1.75803e-07" />
+</inertial>
+</link>
+
+<joint name="nut_sonar_casco" type="fixed">
+<origin xyz="0.119455 0 -0.0226" rpy="-3.14159 -1.5708 0" />
+<parent link="casco" />
+<child link="nut_sonar" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="penetrator_sonar">
+<visual>
+<origin xyz="0 0 0" rpy="3.14159 -2.18953e-47 2.73691e-46" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/penetrator_sonar.stl"/>
+</geometry>
+<material name="penetrator_sonar_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.14159 -2.18953e-47 2.73691e-46" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/penetrator_sonar.stl"/>
+</geometry>
+<material name="penetrator_sonar_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.41256e-07 1.23041e-06 0.00207195" rpy="0 0 0"/>
+<mass value="0.00763249" />
+<inertia ixx="9.47319e-07" ixy="-4.99877e-12"  ixz="1.26332e-10" iyy="9.66562e-07" iyz="1.54418e-10" izz="2.68146e-07" />
+</inertial>
+</link>
+
+<joint name="penetrator_sonar_casco" type="fixed">
+<origin xyz="0.12382 0 -0.0226" rpy="-3.14159 1.5708 0" />
+<parent link="casco" />
+<child link="penetrator_sonar" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="penetrator_thruster">
+<visual>
+<origin xyz="0 0 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/penetrator_thruster.stl"/>
+</geometry>
+<material name="penetrator_thruster_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/penetrator_thruster.stl"/>
+</geometry>
+<material name="penetrator_thruster_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.1339e-06 3.32096e-07 -0.000844262" rpy="0 0 0"/>
+<mass value="0.00667911" />
+<inertia ixx="9.39755e-07" ixy="5.76856e-12"  ixz="7.58764e-11" iyy="9.67415e-07" iyz="1.67125e-10" izz="2.93346e-07" />
+</inertial>
+</link>
+
+<link name="fio_thruster">
+<visual>
+<origin xyz="0.0386757 -1.92882e-19 -0.0545" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/fio_thruster.stl"/>
+</geometry>
+<material name="fio_thruster_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.0386757 -1.92882e-19 -0.0545" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/fio_thruster.stl"/>
+</geometry>
+<material name="fio_thruster_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.028128 0.000462545 -0.0499787" rpy="0 0 0"/>
+<mass value="0.00685418" />
+<inertia ixx="3.05175e-06" ixy="4.87842e-08"  ixz="7.36354e-07" iyy="9.04338e-06" iyz="1.4332e-08" izz="7.9135e-06" />
+</inertial>
+</link>
+
+<joint name="fio_thruster_thruster" type="fixed">
+<origin xyz="0 -1.92882e-19 0.0245" rpy="0 -0 3.14159" />
+<parent link="penetrator_thruster" />
+<child link="fio_thruster" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="penetrator_thruster_casco" type="fixed">
+<origin xyz="-0.033384 0 -0.083" rpy="0 -0 3.14159" />
+<parent link="casco" />
+<child link="penetrator_thruster" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="nut_thruster">
+<visual>
+<origin xyz="0.000138592 -0.000180965 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/nut_thruster.stl"/>
+</geometry>
+<material name="nut_thruster_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000138592 -0.000180965 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/nut_thruster.stl"/>
+</geometry>
+<material name="nut_thruster_material">
+<color rgba="1 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.000143255 -0.000180355 -0.00799999" rpy="0 0 0"/>
+<mass value="0.00744372" />
+<inertia ixx="3.21983e-07" ixy="-3.23981e-12"  ixz="2.14877e-11" iyy="3.47049e-07" iyz="-1.63031e-10" izz="3.58177e-07" />
+</inertial>
+</link>
+
+<joint name="nut_thruster_casco" type="fixed">
+<origin xyz="-0.0333479 1.95753e-16 -0.08" rpy="3.14159 -0 0" />
+<parent link="casco" />
+<child link="nut_thruster" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="sonar_ping360">
+<visual>
+<origin xyz="0 0.00135122 -0.0401341" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/sonar_ping360.stl"/>
+</geometry>
+<material name="sonar_ping360_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0.00135122 -0.0401341" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/sonar_ping360.stl"/>
+</geometry>
+<material name="sonar_ping360_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-8.51618e-09 0.000336838 -0.0424682" rpy="0 0 0"/>
+<mass value="0.527883" />
+<inertia ixx="0.000463834" ixy="1.24769e-10"  ixz="1.16888e-10" iyy="0.000456973" iyz="-5.2395e-06" izz="0.000337447" />
+</inertial>
+</link>
+
+<link name="hokoyu_link">
+<visual>
+<origin xyz="-1.3165e-19 0 -0.0001" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/hokoyu_link.stl"/>
+</geometry>
+<material name="hokoyu_link_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-1.3165e-19 0 -0.0001" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/hokoyu_link.stl"/>
+</geometry>
+<material name="hokoyu_link_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-9.87374e-20 8.07232e-20 -5e-05" rpy="0 0 0"/>
+<mass value="3.30496e-07" />
+<inertia ixx="8.28993e-14" ixy="0"  ixz="0" iyy="8.28993e-14" iyz="0" izz="1.65248e-13" />
+</inertial>
+</link>
+
+<joint name="hokoyu_link_sonarping_360" type="fixed">
+<origin xyz="-7.70372e-34 0 -0.0651556" rpy="1.72563e-31 -0 0" />
+<parent link="sonar_ping360" />
+<child link="hokoyu_link" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="sonar_ping360_casco" type="fixed">
+<origin xyz="0.15282 -3.46945e-18 -0.0751997" rpy="1.5708 -0 -1.5708" />
+<parent link="casco" />
+<child link="sonar_ping360" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="thruster_base">
+<visual>
+<origin xyz="3.2255e-18 -0.00525178 -0.049" rpy="4.93038e-32 7.31806e-32 1.6972e-80" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/thruster_base.stl"/>
+</geometry>
+<material name="thruster_base_material">
+<color rgba="0.792157 0.819608 0.933333 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="3.2255e-18 -0.00525178 -0.049" rpy="4.93038e-32 7.31806e-32 1.6972e-80" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/thruster_base.stl"/>
+</geometry>
+<material name="thruster_base_material">
+<color rgba="0.792157 0.819608 0.933333 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-9.26481e-07 -0.00930374 -0.0484144" rpy="0 0 0"/>
+<mass value="0.344718" />
+<inertia ixx="0.000303609" ixy="-2.33208e-09"  ixz="-2.1748e-09" iyy="0.000335577" iyz="-1.27701e-06" izz="0.000295052" />
+</inertial>
+</link>
+
+<link name="thruster_helice">
+<visual>
+<origin xyz="-7.08857e-17 -5.55112e-16 -0.02485" rpy="-1.5708 5.84663e-16 8.75812e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/thruster_helice.stl"/>
+</geometry>
+<material name="thruster_helice_material">
+<color rgba="0.792157 0.819608 0.933333 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-7.08857e-17 -5.55112e-16 -0.02485" rpy="-1.5708 5.84663e-16 8.75812e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/thruster_helice.stl"/>
+</geometry>
+<material name="thruster_helice_material">
+<color rgba="0.792157 0.819608 0.933333 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.43442e-08 2.23714e-06 -0.0173165" rpy="0 0 0"/>
+<mass value="0.00921082" />
+<inertia ixx="2.62673e-06" ixy="3.02105e-10"  ixz="-3.38867e-11" iyy="2.62649e-06" iyz="-4.77514e-11" izz="3.82582e-06" />
+</inertial>
+</link>
+
+<joint name="thuster_base_thruster_helice" type="continuous">
+<origin xyz="2.98752e-18 -0.0317518 -0.049" rpy="1.5708 -5.47382e-46 -9.36409e-32" />
+<parent link="thruster_base" />
+<child link="thruster_helice" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="0" upper="6.28319"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="thruster_base_casco" type="fixed">
+<origin xyz="0.00529174 -2.9238e-10 -0.12" rpy="2.18953e-47 2.18953e-47 -1.5708" />
+<parent link="casco" />
+<child link="thruster_base" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="peca_eixo">
+<visual>
+<origin xyz="0 0 -0.043915" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_eixo.stl"/>
+</geometry>
+<material name="peca_eixo_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.043915" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_eixo.stl"/>
+</geometry>
+<material name="peca_eixo_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.23897e-18 0.00961833 -0.0133551" rpy="0 0 0"/>
+<mass value="0.00165156" />
+<inertia ixx="1.03652e-07" ixy="0"  ixz="0" iyy="9.1338e-08" iyz="3.23525e-09" izz="2.11505e-08" />
+</inertial>
+</link>
+
+<joint name="peca_eixo_1_casco" type="fixed">
+<origin xyz="-0.0627976 -0.0852 -0.0364809" rpy="1.5708 -0 0" />
+<parent link="casco" />
+<child link="peca_eixo" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="peca_eixo_2">
+<visual>
+<origin xyz="0 0 -0.043915" rpy="3.88938e-62 3.09935e-62 -1.77899e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_eixo.stl"/>
+</geometry>
+<material name="peca_eixo_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.043915" rpy="3.88938e-62 3.09935e-62 -1.77899e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_eixo.stl"/>
+</geometry>
+<material name="peca_eixo_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.23897e-18 0.00961833 -0.0133551" rpy="0 0 0"/>
+<mass value="0.00165156" />
+<inertia ixx="1.03652e-07" ixy="-3.46885e-54"  ixz="-5.75548e-56" iyy="9.1338e-08" iyz="3.23525e-09" izz="2.11505e-08" />
+</inertial>
+</link>
+
+<joint name="peca_eixo_2_casco" type="fixed">
+<origin xyz="-0.0627976 0.0852 -0.0364809" rpy="1.5708 2.37275e-31 -3.14159" />
+<parent link="casco" />
+<child link="peca_eixo_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="tampa_paraf_thruster">
+<visual>
+<origin xyz="0 -6.12323e-19 -0.004" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/tampa_paraf_thruster.stl"/>
+</geometry>
+<material name="tampa_paraf_thruster_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.12323e-19 -0.004" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/tampa_paraf_thruster.stl"/>
+</geometry>
+<material name="tampa_paraf_thruster_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.24007e-10 1.44033e-10 -0.00159623" rpy="0 0 0"/>
+<mass value="0.00459733" />
+<inertia ixx="2.81726e-07" ixy="-4.13384e-15"  ixz="-1.39496e-16" iyy="2.84562e-07" iyz="2.75105e-16" izz="5.19965e-07" />
+</inertial>
+</link>
+
+<joint name="tampa_paraf_thruster_casco" type="fixed">
+<origin xyz="0.00529174 -2.9238e-10 -0.0925" rpy="3.14159 -0 0" />
+<parent link="casco" />
+<child link="tampa_paraf_thruster" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="tampa_paraf_sonar">
+<visual>
+<origin xyz="-2.21489e-14 1.03112e-14 -0.005" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/tampa_paraf_sonar.stl"/>
+</geometry>
+<material name="tampa_paraf_sonar_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-2.21489e-14 1.03112e-14 -0.005" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/tampa_paraf_sonar.stl"/>
+</geometry>
+<material name="tampa_paraf_sonar_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-4.33326e-09 2.04902e-09 -0.00206468" rpy="0 0 0"/>
+<mass value="0.00540217" />
+<inertia ixx="3.47191e-07" ixy="-1.48385e-13"  ixz="-1.019e-14" iyy="3.48854e-07" iyz="4.82037e-15" izz="6.31222e-07" />
+</inertial>
+</link>
+
+<joint name="tampa_paraf_sonar_casco" type="fixed">
+<origin xyz="0.118955 0 -0.075" rpy="1.5708 -1.84889e-32 1.5708" />
+<parent link="casco" />
+<child link="tampa_paraf_sonar" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.46367e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="-4.54559e-70"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_1" type="fixed">
+<origin xyz="6.93889e-18 -0.0756 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_2">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.46367e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="-4.54559e-70"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_2" type="fixed">
+<origin xyz="0.0520269 -0.0717371 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_3">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="5.47522e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_4" type="fixed">
+<origin xyz="0.155166 -0.0304993 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_4">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.46367e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="-4.54559e-70"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_6" type="fixed">
+<origin xyz="-0.0520269 -0.0717371 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_5">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="5.47522e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_8" type="fixed">
+<origin xyz="-0.157166 -0.0282993 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_5" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_6">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="5.47522e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_9" type="fixed">
+<origin xyz="-0.185162 0 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_6" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_7">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="5.47522e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_10" type="fixed">
+<origin xyz="0.18877 0 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_7" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_8">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="5.47522e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_12" type="fixed">
+<origin xyz="0.155166 0.0304993 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_8" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_9">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.46367e-18 1.38778e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_13" type="fixed">
+<origin xyz="0.0520269 0.0717371 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_9" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_10">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.46367e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="-4.54559e-70"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_14" type="fixed">
+<origin xyz="6.93889e-18 0.0756 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_10" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_11">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.46367e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="-4.54559e-70"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_15" type="fixed">
+<origin xyz="-0.0520269 0.0717371 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_11" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="porca_12">
+<visual>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.000255508 -0.0757185 -0.003" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/porca.stl"/>
+</geometry>
+<material name="porca_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="5.47522e-18 4.16334e-17 -0.0015" rpy="0 0 0"/>
+<mass value="0.000382965" />
+<inertia ixx="1.283e-09" ixy="0"  ixz="0" iyy="1.283e-09" iyz="0" izz="1.99155e-09" />
+</inertial>
+</link>
+
+<joint name="porca_17" type="fixed">
+<origin xyz="-0.157166 0.0282993 -0.0035" rpy="0 -0 0" />
+<parent link="casco" />
+<child link="porca_12" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="oring">
+<visual>
+<origin xyz="0.1595 3.06142e-20 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/oring.stl"/>
+</geometry>
+<material name="oring_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.1595 3.06142e-20 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/oring.stl"/>
+</geometry>
+<material name="oring_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.159479 1.84403e-05 -5.99321e-07" rpy="0 0 0"/>
+<mass value="0.0102404" />
+<inertia ixx="2.84871e-05" ixy="4.27751e-08"  ixz="-2.69749e-10" iyy="0.000105679" iyz="-6.76644e-13" izz="0.000134134" />
+</inertial>
+</link>
+
+<joint name="oring_casco" type="fixed">
+<origin xyz="-0.1595 3.06142e-20 -0.0025" rpy="3.14159 -0 0" />
+<parent link="casco" />
+<child link="oring" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="suporte_bomba">
+<visual>
+<origin xyz="0.120788 0.000502668 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_bomba.stl"/>
+</geometry>
+<material name="suporte_bomba_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.120788 0.000502668 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_bomba.stl"/>
+</geometry>
+<material name="suporte_bomba_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.00937883 0.000739605 -0.0246965" rpy="0 0 0"/>
+<mass value="0.0121314" />
+<inertia ixx="1.04336e-05" ixy="4.19498e-08"  ixz="-1.2057e-06" iyy="6.78433e-06" iyz="1.49751e-07" izz="5.2699e-06" />
+</inertial>
+</link>
+
+<link name="parafuso">
+<visual>
+<origin xyz="0 -2.1684e-19 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -2.1684e-19 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 -1.64554e-20 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_1_sup_bomba" type="fixed">
+<origin xyz="-1.38778e-17 6.50521e-19 -0.004" rpy="0 -0 0" />
+<parent link="suporte_bomba" />
+<child link="parafuso" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_2">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_2_sup_bomba" type="fixed">
+<origin xyz="0.0206014 0.0181049 -0.004" rpy="0 -0 0" />
+<parent link="suporte_bomba" />
+<child link="parafuso_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_3">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_3_sup_bomba" type="fixed">
+<origin xyz="0.0210242 -0.0176745 -0.004" rpy="0 -0 0" />
+<parent link="suporte_bomba" />
+<child link="parafuso_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="bomba">
+<visual>
+<origin xyz="-0.027 0.017 -0.018" rpy="3.14159 -1.21543e-63 2.39702e-94" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/bomba.stl"/>
+</geometry>
+<material name="bomba_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.027 0.017 -0.018" rpy="3.14159 -1.21543e-63 2.39702e-94" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/bomba.stl"/>
+</geometry>
+<material name="bomba_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.027 0.0169748 0.0006377" rpy="0 0 0"/>
+<mass value="0.159129" />
+<inertia ixx="6.45122e-05" ixy="2.37935e-11"  ixz="-1.61871e-10" iyy="6.58403e-05" iyz="-8.65501e-08" izz="3.40152e-05" />
+</inertial>
+</link>
+
+<link name="bomba_ac">
+<visual>
+<origin xyz="0 -6.42898e-19 -0.005" rpy="-7.86862e-48 6.56859e-47 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/bomba_ac.stl"/>
+</geometry>
+<material name="bomba_ac_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.42898e-19 -0.005" rpy="-7.86862e-48 6.56859e-47 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/bomba_ac.stl"/>
+</geometry>
+<material name="bomba_ac_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-6.5718e-06 6.83327e-06 -0.00254789" rpy="0 0 0"/>
+<mass value="0.000259614" />
+<inertia ixx="1.60262e-08" ixy="-2.01596e-11"  ixz="2.21437e-12" iyy="1.5797e-08" iyz="-2.30247e-12" izz="3.07427e-08" />
+</inertial>
+</link>
+
+<joint name="bomba_ac" type="continuous">
+<origin xyz="-0.027 0.017 -0.024" rpy="-3.14159 -3.33067e-16 -1.5708" />
+<parent link="bomba" />
+<child link="bomba_ac" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_4">
+<visual>
+<origin xyz="0 3.46945e-18 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 3.46945e-18 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 3.66983e-18 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-1.64234e-54"  ixz="4.12183e-57" iyy="8.3343e-09" iyz="5.00289e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_4_sup_bomba" type="fixed">
+<origin xyz="-0.054 -3.46945e-18 -0.003" rpy="1.66533e-16 1.36846e-48 5.55112e-17" />
+<parent link="bomba" />
+<child link="parafuso_4" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_5">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-1.64234e-54"  ixz="4.12183e-57" iyy="8.3343e-09" iyz="5.00289e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_5_sup_bomba" type="fixed">
+<origin xyz="0 -3.46945e-18 -0.003" rpy="1.66533e-16 1.36846e-48 5.55112e-17" />
+<parent link="bomba" />
+<child link="parafuso_5" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_6">
+<visual>
+<origin xyz="0 -6.93889e-18 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.93889e-18 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 -6.73851e-18 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-1.64234e-54"  ixz="4.12183e-57" iyy="8.3343e-09" iyz="5.00289e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_6_sup_bomba" type="fixed">
+<origin xyz="-6.93889e-18 0.034 -0.003" rpy="1.66533e-16 1.36846e-48 5.55112e-17" />
+<parent link="bomba" />
+<child link="parafuso_6" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_7">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-1.64234e-54"  ixz="4.12183e-57" iyy="8.3343e-09" iyz="5.00289e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_7_sup_bomba" type="fixed">
+<origin xyz="-0.054 0.034 -0.003" rpy="1.66533e-16 1.36846e-48 5.55112e-17" />
+<parent link="bomba" />
+<child link="parafuso_7" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="bomba_suporte" type="fixed">
+<origin xyz="0.0027 0.0284027 -0.0624036" rpy="1.5708 -0 1.5708" />
+<parent link="suporte_bomba" />
+<child link="bomba" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="peso_f">
+<visual>
+<origin xyz="0.00894596 -0.00423924 -0.02" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peso_f.stl"/>
+</geometry>
+<material name="peso_f_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.00894596 -0.00423924 -0.02" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peso_f.stl"/>
+</geometry>
+<material name="peso_f_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.46945e-18 0 -0.01" rpy="0 0 0"/>
+<mass value="0.34048" />
+<inertia ixx="2.15921e-05" ixy="0"  ixz="0" iyy="1.69105e-05" iyz="0" izz="1.58039e-05" />
+</inertial>
+</link>
+
+<joint name="peso_f_joint" type="fixed">
+<origin xyz="0.00570928 -0.00010483 -0.0160626" rpy="-3.14159 1.5708 0" />
+<parent link="suporte_bomba" />
+<child link="peso_f" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="suporte_bomba" type="fixed">
+<origin xyz="-0.120788 0.0013965 -0.083" rpy="3.14159 -0 0" />
+<parent link="casco" />
+<child link="suporte_bomba" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="eixo_flap_base">
+<visual>
+<origin xyz="0 0 0.0525" rpy="-1.5708 4.7038e-33 8.54727e-50" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap_base.stl"/>
+</geometry>
+<material name="eixo_flap_base_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.0525" rpy="-1.5708 4.7038e-33 8.54727e-50" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap_base.stl"/>
+</geometry>
+<material name="eixo_flap_base_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="4.93525e-07 0.000216738 0.0512933" rpy="0 0 0"/>
+<mass value="0.0524213" />
+<inertia ixx="9.96192e-05" ixy="5.60728e-12"  ixz="6.41008e-11" iyy="9.95089e-05" iyz="6.11182e-07" izz="5.83966e-07" />
+</inertial>
+</link>
+
+<joint name="eixo_flap_base_r_casco" type="fixed">
+<origin xyz="-0.0627976 0.0590786 -0.0364809" rpy="1.5708 -0 -3.14159" />
+<parent link="casco" />
+<child link="eixo_flap_base" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="eixo_flap_base_2">
+<visual>
+<origin xyz="0 0 0.0525" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap_base.stl"/>
+</geometry>
+<material name="eixo_flap_base_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.0525" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap_base.stl"/>
+</geometry>
+<material name="eixo_flap_base_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="4.93525e-07 0.000216738 0.0512933" rpy="0 0 0"/>
+<mass value="0.0524213" />
+<inertia ixx="9.96192e-05" ixy="5.60728e-12"  ixz="6.41008e-11" iyy="9.95089e-05" iyz="6.11182e-07" izz="5.83966e-07" />
+</inertial>
+</link>
+
+<joint name="eixo_flap_base_l_casco" type="fixed">
+<origin xyz="-0.0627976 -0.0590786 -0.0364809" rpy="1.5708 -0 0" />
+<parent link="casco" />
+<child link="eixo_flap_base_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="eixo_flap_base_3">
+<visual>
+<origin xyz="1.71057e-49 0 0.0525" rpy="-1.5708 -9.68827e-81 1.96501e-49" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap_base.stl"/>
+</geometry>
+<material name="eixo_flap_base_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.71057e-49 0 0.0525" rpy="-1.5708 -9.68827e-81 1.96501e-49" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap_base.stl"/>
+</geometry>
+<material name="eixo_flap_base_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="4.93525e-07 0.000216738 0.0512933" rpy="0 0 0"/>
+<mass value="0.0524213" />
+<inertia ixx="9.96192e-05" ixy="5.60728e-12"  ixz="6.41008e-11" iyy="9.95089e-05" iyz="6.11182e-07" izz="5.83966e-07" />
+</inertial>
+</link>
+
+<joint name="eixo_flap_base_rudder_casco" type="fixed">
+<origin xyz="0.0801351 -4.4201e-51 -0.072059" rpy="3.14159 -0 -1.5708" />
+<parent link="casco" />
+<child link="eixo_flap_base_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="eixo_flap">
+<visual>
+<origin xyz="1.38778e-17 0 -0.075" rpy="1.5708 -0 -9.63738e-18" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap.stl"/>
+</geometry>
+<material name="eixo_flap_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.38778e-17 0 -0.075" rpy="1.5708 -0 -9.63738e-18" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap.stl"/>
+</geometry>
+<material name="eixo_flap_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.38664e-07 2.86592e-06 -0.0742065" rpy="0 0 0"/>
+<mass value="0.0104121" />
+<inertia ixx="2.92662e-05" ixy="-2.78285e-14"  ixz="-4.39988e-12" iyy="2.92663e-05" iyz="-2.63435e-09" izz="1.16942e-08" />
+</inertial>
+</link>
+
+<link name="gaxeta">
+<visual>
+<origin xyz="-1.38778e-17 3.46945e-18 -0.005" rpy="-1.46423e-33 2.08185e-34 2.58932e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/gaxeta.stl"/>
+</geometry>
+<material name="gaxeta_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-1.38778e-17 3.46945e-18 -0.005" rpy="-1.46423e-33 2.08185e-34 2.58932e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/gaxeta.stl"/>
+</geometry>
+<material name="gaxeta_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.39888e-11 4.38898e-05 -0.00199273" rpy="0 0 0"/>
+<mass value="0.00144054" />
+<inertia ixx="9.39445e-09" ixy="-1.49997e-15"  ixz="3.17149e-16" iyy="1.0572e-08" iyz="6.64662e-11" izz="1.03195e-08" />
+</inertial>
+</link>
+
+<link name="borracha_eixo2">
+<visual>
+<origin xyz="0 0 -0.002" rpy="-1.5708 -1.51556e-33 2.44011e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/borracha_eixo2.stl"/>
+</geometry>
+<material name="borracha_eixo2_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.002" rpy="-1.5708 -1.51556e-33 2.44011e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/borracha_eixo2.stl"/>
+</geometry>
+<material name="borracha_eixo2_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.56726e-19 3.59795e-19 -0.001" rpy="0 0 0"/>
+<mass value="9.28906e-05" />
+<inertia ixx="4.61976e-10" ixy="2.14953e-26"  ixz="8.90207e-43" iyy="4.61976e-10" iyz="4.37271e-42" izz="8.62025e-10" />
+</inertial>
+</link>
+
+<joint name="borracha_eixo_r_gaxeta_r" type="fixed">
+<origin xyz="-1.38778e-17 3.46945e-18 -0.005" rpy="-3.11253e-17 9.88158e-32 2.58932e-17" />
+<parent link="gaxeta" />
+<child link="borracha_eixo2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="gaxeta_r_eixo_flap_r" type="fixed">
+<origin xyz="1.38778e-17 1.38778e-17 0.0117546" rpy="-2.77927e-17 -4.93038e-32 3.14159" />
+<parent link="eixo_flap" />
+<child link="gaxeta" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="flap">
+<visual>
+<origin xyz="1.38778e-17 0 -0.1005" rpy="-1.5708 -5.05452e-33 2.58157e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/flap.stl"/>
+</geometry>
+<material name="flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.38778e-17 0 -0.1005" rpy="-1.5708 -5.05452e-33 2.58157e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/flap.stl"/>
+</geometry>
+<material name="flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0188315 1.75713e-07 -0.0698645" rpy="0 0 0"/>
+<mass value="0.0382431" />
+<inertia ixx="5.25234e-05" ixy="-8.702e-11"  ixz="-2.83888e-06" iyy="6.45193e-05" iyz="-2.89565e-11" izz="1.33195e-05" />
+</inertial>
+</link>
+
+<link name="peca_flap">
+<visual>
+<origin xyz="0 0 -0.003" rpy="1.51934e-33 -2.1782e-34 1.30094e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_flap.stl"/>
+</geometry>
+<material name="peca_flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="1.51934e-33 -2.1782e-34 1.30094e-17" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_flap.stl"/>
+</geometry>
+<material name="peca_flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.004521 -5.12794e-20 -0.0015" rpy="0 0 0"/>
+<mass value="0.000621423" />
+<inertia ixx="4.85566e-09" ixy="-5.86787e-26"  ixz="1.67446e-39" iyy="2.78564e-08" iyz="-1.34853e-39" izz="3.17799e-08" />
+</inertial>
+</link>
+
+<joint name="peca_flap_r_flap_r" type="fixed">
+<origin xyz="0 0 0.0045" rpy="6.44395e-17 -2.67233e-16 -1.68152e-16" />
+<parent link="flap" />
+<child link="peca_flap" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="flap_r_eixo_flap_r" type="fixed">
+<origin xyz="1.38778e-17 0 -0.166" rpy="3.14159 -6.12323e-17 -3.06806e-16" />
+<parent link="eixo_flap" />
+<child link="flap" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="flap_r" type="revolute">
+<origin xyz="-0.0627976 0.0412 -0.0364809" rpy="-1.5708 0.218812 3.14159" />
+<parent link="casco" />
+<child link="eixo_flap" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.698132" upper="0.698132"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="eixo_flap_2">
+<visual>
+<origin xyz="0 0 0.0751" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap.stl"/>
+</geometry>
+<material name="eixo_flap_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0.0751" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap.stl"/>
+</geometry>
+<material name="eixo_flap_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.38664e-07 -2.86592e-06 0.0743065" rpy="0 0 0"/>
+<mass value="0.0104121" />
+<inertia ixx="2.92662e-05" ixy="2.78285e-14"  ixz="4.39988e-12" iyy="2.92663e-05" iyz="-2.63435e-09" izz="1.16942e-08" />
+</inertial>
+</link>
+
+<link name="gaxeta_2">
+<visual>
+<origin xyz="0 0 -0.005" rpy="-3.08149e-33 -1.20525e-48 -3.40494e-67" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/gaxeta.stl"/>
+</geometry>
+<material name="gaxeta_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.005" rpy="-3.08149e-33 -1.20525e-48 -3.40494e-67" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/gaxeta.stl"/>
+</geometry>
+<material name="gaxeta_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.39888e-11 4.38898e-05 -0.00199273" rpy="0 0 0"/>
+<mass value="0.00144054" />
+<inertia ixx="9.39445e-09" ixy="-1.49997e-15"  ixz="3.17149e-16" iyy="1.0572e-08" iyz="6.64662e-11" izz="1.03195e-08" />
+</inertial>
+</link>
+
+<link name="borracha_eixo2_2">
+<visual>
+<origin xyz="0 0 0" rpy="1.5708 -5.47382e-48 -1.66172e-65" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/borracha_eixo2.stl"/>
+</geometry>
+<material name="borracha_eixo2_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 0" rpy="1.5708 -5.47382e-48 -1.66172e-65" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/borracha_eixo2.stl"/>
+</geometry>
+<material name="borracha_eixo2_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.56726e-19 -3.59795e-19 -0.001" rpy="0 0 0"/>
+<mass value="9.28906e-05" />
+<inertia ixx="4.61976e-10" ixy="-7.10687e-72"  ixz="2.52877e-57" iyy="4.61976e-10" iyz="1.41665e-43" izz="8.62025e-10" />
+</inertial>
+</link>
+
+<joint name="borracha_eixo2_l_gaxeta_l" type="fixed">
+<origin xyz="0 0 -0.005" rpy="7.03072e-17 7.46907e-32 1.15925e-49" />
+<parent link="gaxeta_2" />
+<child link="borracha_eixo2_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="gaxeta_l_eixo_flap_l" type="fixed">
+<origin xyz="1.38778e-17 0 -0.0116546" rpy="3.14159 4.38758e-32 0" />
+<parent link="eixo_flap_2" />
+<child link="gaxeta_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="flap_2">
+<visual>
+<origin xyz="0 0 -0.1005" rpy="-1.5708 1.83852e-34 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/flap.stl"/>
+</geometry>
+<material name="flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.1005" rpy="-1.5708 1.83852e-34 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/flap.stl"/>
+</geometry>
+<material name="flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0188315 1.75713e-07 -0.0698645" rpy="0 0 0"/>
+<mass value="0.0382431" />
+<inertia ixx="5.25234e-05" ixy="-8.702e-11"  ixz="-2.83888e-06" iyy="6.45193e-05" iyz="-2.89565e-11" izz="1.33195e-05" />
+</inertial>
+</link>
+
+<link name="peca_flap_2">
+<visual>
+<origin xyz="0 0 2.77556e-17" rpy="-3.14159 1.75319e-33 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_flap.stl"/>
+</geometry>
+<material name="peca_flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 2.77556e-17" rpy="-3.14159 1.75319e-33 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_flap.stl"/>
+</geometry>
+<material name="peca_flap_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.004521 -7.53609e-21 -0.0015" rpy="0 0 0"/>
+<mass value="0.000621423" />
+<inertia ixx="4.85566e-09" ixy="-2.14598e-40"  ixz="1.59235e-40" iyy="2.78564e-08" iyz="1.23202e-39" izz="3.17799e-08" />
+</inertial>
+</link>
+
+<joint name="peca_flap_l_flap_l" type="fixed">
+<origin xyz="0 0 0.0045" rpy="-5.22155e-16 1.14428e-16 -6.66372e-32" />
+<parent link="flap_2" />
+<child link="peca_flap_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="flap_l_eixo_falp_l" type="fixed">
+<origin xyz="0 0 0.1661" rpy="-5.29916e-17 1.08708e-16 3.14159" />
+<parent link="eixo_flap_2" />
+<child link="flap_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="flap_l" type="revolute">
+<origin xyz="-0.0627976 -0.0412 -0.0364809" rpy="1.5708 -0 0" />
+<parent link="casco" />
+<child link="eixo_flap_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-0.698132" upper="0.698132"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="eixo_flap_3">
+<visual>
+<origin xyz="1.0842e-19 0 0.00372449" rpy="-1.5708 -0 2.79378e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap.stl"/>
+</geometry>
+<material name="eixo_flap_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.0842e-19 0 0.00372449" rpy="-1.5708 -0 2.79378e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/eixo_flap.stl"/>
+</geometry>
+<material name="eixo_flap_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.38664e-07 -2.86592e-06 0.00293103" rpy="0 0 0"/>
+<mass value="0.0104121" />
+<inertia ixx="2.92662e-05" ixy="2.78285e-14"  ixz="4.39988e-12" iyy="2.92663e-05" iyz="-2.63435e-09" izz="1.16942e-08" />
+</inertial>
+</link>
+
+<link name="gaxeta_3">
+<visual>
+<origin xyz="0 -1.0842e-19 0" rpy="3.14159 4.93038e-32 -5.48312e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/gaxeta.stl"/>
+</geometry>
+<material name="gaxeta_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -1.0842e-19 0" rpy="3.14159 4.93038e-32 -5.48312e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/gaxeta.stl"/>
+</geometry>
+<material name="gaxeta_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.39888e-11 -4.38898e-05 -0.00300727" rpy="0 0 0"/>
+<mass value="0.00144054" />
+<inertia ixx="9.39445e-09" ixy="1.49997e-15"  ixz="-3.17149e-16" iyy="1.0572e-08" iyz="6.64662e-11" izz="1.03195e-08" />
+</inertial>
+</link>
+
+<link name="borracha_eixo">
+<visual>
+<origin xyz="0 -1.0842e-19 -0.0009" rpy="-1.5708 -9.86076e-32 3.20635e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/borracha_eixo.stl"/>
+</geometry>
+<material name="borracha_eixo_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -1.0842e-19 -0.0009" rpy="-1.5708 -9.86076e-32 3.20635e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/borracha_eixo.stl"/>
+</geometry>
+<material name="borracha_eixo_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.2211e-19 2.57466e-19 -0.00045" rpy="0 0 0"/>
+<mass value="4.02379e-05" />
+<inertia ixx="1.94475e-10" ixy="-2.28486e-28"  ixz="1.91767e-41" iyy="1.94475e-10" iyz="6.14872e-60" izz="3.83518e-10" />
+</inertial>
+</link>
+
+<joint name="borracha_eixo_rudder_gaxeta_rudder" type="fixed">
+<origin xyz="-3.60822e-16 -1.05384e-16 0" rpy="3.14159 3.8457e-30 -4.13403e-16" />
+<parent link="gaxeta_3" />
+<child link="borracha_eixo" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="gaxeta_rudder_eixo_flap_rudder" type="fixed">
+<origin xyz="-5.01986e-17 3.05311e-16 -0.0713755" rpy="4.81748e-17 -4.43734e-30 1.5708" />
+<parent link="eixo_flap_3" />
+<child link="gaxeta_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="rudder">
+<visual>
+<origin xyz="0 -2.1684e-19 -0.0945" rpy="3.14159 9.86076e-32 -7.61523e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/rudder.stl"/>
+</geometry>
+<material name="rudder_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -2.1684e-19 -0.0945" rpy="3.14159 9.86076e-32 -7.61523e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/rudder.stl"/>
+</geometry>
+<material name="rudder_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0223934 1.52044e-07 -0.0515232" rpy="0 0 0"/>
+<mass value="5.21585e-07" />
+<inertia ixx="4.59708e-10" ixy="-1.05805e-15"  ixz="-2.86781e-11" iyy="6.80837e-10" iyz="-1.15774e-16" izz="2.39482e-10" />
+</inertial>
+</link>
+
+<link name="peca_rudder">
+<visual>
+<origin xyz="0 1.0842e-19 0" rpy="-3.14159 -0 -4.88601e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_rudder.stl"/>
+</geometry>
+<material name="peca_rudder_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 1.0842e-19 0" rpy="-3.14159 -0 -4.88601e-19" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peca_rudder.stl"/>
+</geometry>
+<material name="peca_rudder_material">
+<color rgba="0 0 0 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.004521 1.03093e-19 -0.0015" rpy="0 0 0"/>
+<mass value="5.86248e-07" />
+<inertia ixx="4.58082e-12" ixy="5.04891e-31"  ixz="5.40978e-61" iyy="2.62796e-11" iyz="5.18274e-42" izz="2.9981e-11" />
+</inertial>
+</link>
+
+<joint name="peca_rudder_rud" type="fixed">
+<origin xyz="-2.498e-16 -2.77122e-16 0.0055" rpy="4.48856e-16 4.89657e-16 -7.53618e-16" />
+<parent link="rudder" />
+<child link="peca_rudder" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="rudder_eixo_flap" type="fixed">
+<origin xyz="2.22912e-16 1.38778e-17 0.0947245" rpy="5.49383e-16 -1.00767e-15 -1.5708" />
+<parent link="eixo_flap_3" />
+<child link="rudder" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="rudder" type="revolute">
+<origin xyz="0.0801351 -8.08906e-17 -0.12" rpy="-3.14159 1.66533e-16 1.56435" />
+<parent link="casco" />
+<child link="eixo_flap_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" lower="-1.0472" upper="1.0472"/>
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="suporte_placas">
+<visual>
+<origin xyz="0.00110515 -0.0590662 -0.0399941" rpy="-3.14159 -2.73691e-48 5.2754e-46" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_placas.stl"/>
+</geometry>
+<material name="suporte_placas_material">
+<color rgba="0.4 0.388235 0.34902 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.00110515 -0.0590662 -0.0399941" rpy="-3.14159 -2.73691e-48 5.2754e-46" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_placas.stl"/>
+</geometry>
+<material name="suporte_placas_material">
+<color rgba="0.4 0.388235 0.34902 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.000961502 -0.058391 -0.0264859" rpy="0 0 0"/>
+<mass value="0.0587782" />
+<inertia ixx="7.45497e-05" ixy="2.40053e-07"  ixz="-1.9882e-07" iyy="2.97005e-05" iyz="7.47023e-07" izz="7.87979e-05" />
+</inertial>
+</link>
+
+<link name="ssd">
+<visual>
+<origin xyz="-0.0130308 0 -0.103973" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/ssd.stl"/>
+</geometry>
+<material name="ssd_material">
+<color rgba="0.811765 0.858824 0.898039 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0130308 0 -0.103973" rpy="-1.5708 -1.5708 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/ssd.stl"/>
+</geometry>
+<material name="ssd_material">
+<color rgba="0.811765 0.858824 0.898039 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.7451e-07 0.00499146 -0.0556695" rpy="0 0 0"/>
+<mass value="0.0460669" />
+<inertia ixx="4.74182e-05" ixy="3.62579e-11"  ixz="3.9949e-10" iyy="5.26271e-05" iyz="1.96074e-08" izz="5.93568e-06" />
+</inertial>
+</link>
+
+<joint name="ssd_suporte_placas" type="fixed">
+<origin xyz="0.00110515 -0.00356617 -0.0348941" rpy="-1.5708 -1.97575e-16 -1.01308e-15" />
+<parent link="suporte_placas" />
+<child link="ssd" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="raspberry">
+<visual>
+<origin xyz="0.0291277 -0.0389086 0" rpy="-3.14159 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/raspberry.stl"/>
+</geometry>
+<material name="raspberry_material">
+<color rgba="0.513725 0.737255 0.407843 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.0291277 -0.0389086 0" rpy="-3.14159 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/raspberry.stl"/>
+</geometry>
+<material name="raspberry_material">
+<color rgba="0.513725 0.737255 0.407843 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.0251557 -0.0473461 -0.00351939" rpy="0 0 0"/>
+<mass value="0.0511521" />
+<inertia ixx="3.4794e-05" ixy="2.25554e-07"  ixz="9.90142e-08" iyy="1.45265e-05" iyz="-2.05646e-06" izz="4.81865e-05" />
+</inertial>
+</link>
+
+<link name="parafuso_8">
+<visual>
+<origin xyz="0 3.46945e-18 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 3.46945e-18 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 3.66983e-18 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="6.62073e-40"  ixz="-9.27645e-41" iyy="8.3343e-09" iyz="2.00194e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_1_rasp" type="fixed">
+<origin xyz="0.0473117 -0.058 -0.003" rpy="1.89018e-46 1.08668e-32 5.47876e-32" />
+<parent link="raspberry" />
+<child link="parafuso_8" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_9">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="6.62073e-40"  ixz="-9.27645e-41" iyy="8.3343e-09" iyz="2.00194e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_2_rasp" type="fixed">
+<origin xyz="-3.46945e-18 -0.058 -0.003" rpy="1.89018e-46 1.08668e-32 5.47876e-32" />
+<parent link="raspberry" />
+<child link="parafuso_9" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_10">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="6.62073e-40"  ixz="-9.27645e-41" iyy="8.3343e-09" iyz="2.00194e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_3_rasp" type="fixed">
+<origin xyz="0 -1.38778e-17 -0.003" rpy="1.89018e-46 1.08668e-32 5.47876e-32" />
+<parent link="raspberry" />
+<child link="parafuso_10" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_11">
+<visual>
+<origin xyz="0 -6.93889e-18 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.93889e-18 -0.003" rpy="-1.5708 1.08668e-32 5.47876e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 -6.73851e-18 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="6.62073e-40"  ixz="-9.27645e-41" iyy="8.3343e-09" iyz="2.00194e-54" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_4_rasp" type="fixed">
+<origin xyz="0.0473117 -6.93889e-18 -0.003" rpy="1.89018e-46 1.08668e-32 5.47876e-32" />
+<parent link="raspberry" />
+<child link="parafuso_11" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="raspberry_suporte_placas" type="fixed">
+<origin xyz="-0.0233948 -0.0200662 -0.0509941" rpy="-5.55112e-17 -1.97575e-16 -7.35523e-16" />
+<parent link="suporte_placas" />
+<child link="raspberry" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="imu">
+<visual>
+<origin xyz="-0.0156603 0.00893127 -3.46945e-18" rpy="-3.14159 -4.26958e-46 -4.17825e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/imu.stl"/>
+</geometry>
+<material name="imu_material">
+<color rgba="0.231373 0.380392 0.705882 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0156603 0.00893127 -3.46945e-18" rpy="-3.14159 -4.26958e-46 -4.17825e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/imu.stl"/>
+</geometry>
+<material name="imu_material">
+<color rgba="0.231373 0.380392 0.705882 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.00880179 0.00514931 -0.00103369" rpy="0 0 0"/>
+<mass value="0.000606154" />
+<inertia ixx="8.87363e-09" ixy="4.38473e-11"  ixz="-3.43822e-11" iyy="2.38546e-08" iyz="3.48854e-12" izz="3.22794e-08" />
+</inertial>
+</link>
+
+<joint name="imu_suporte_placas" type="fixed">
+<origin xyz="0.00638213 -0.0503667 -0.0629941" rpy="-1.97575e-16 -1.60237e-31 1.5708" />
+<parent link="suporte_placas" />
+<child link="imu" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="bateria_lipo">
+<visual>
+<origin xyz="-0.0175 -0.0525 -0.025" rpy="6.16298e-33 -1.45918e-33 -3.87707e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/bateria_lipo.stl"/>
+</geometry>
+<material name="bateria_lipo_material">
+<color rgba="0.32549 0.529412 0.752941 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0175 -0.0525 -0.025" rpy="6.16298e-33 -1.45918e-33 -3.87707e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/bateria_lipo.stl"/>
+</geometry>
+<material name="bateria_lipo_material">
+<color rgba="0.32549 0.529412 0.752941 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="6.93889e-18 -1.38778e-17 -0.0125" rpy="0 0 0"/>
+<mass value="0.1764" />
+<inertia ixx="0.000171255" ixy="1.49956e-36"  ixz="-1.287e-38" iyy="2.7195e-05" iyz="1.2774e-36" izz="0.000180075" />
+</inertial>
+</link>
+
+<joint name="bateria_suporte" type="fixed">
+<origin xyz="0.00110515 -0.0590662 -0.00636706" rpy="-1.249e-16 3.10414e-17 3.14159" />
+<parent link="suporte_placas" />
+<child link="bateria_lipo" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_12">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 9.86076e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 9.86076e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="6.3073e-40"  ixz="0" iyy="8.3343e-09" iyz="-4.12183e-57" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_suporte_placas" type="fixed">
+<origin xyz="4.67737e-18 -1.59595e-16 -0.0063" rpy="9.86076e-32 -3.10414e-17 -1.01308e-15" />
+<parent link="suporte_placas" />
+<child link="parafuso_12" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_13">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 9.86076e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 9.86076e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="6.3073e-40"  ixz="0" iyy="8.3343e-09" iyz="-4.12183e-57" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_2_suporte_placas" type="fixed">
+<origin xyz="0.00137038 -0.117173 -0.0063" rpy="9.86076e-32 -3.10414e-17 -1.01308e-15" />
+<parent link="suporte_placas" />
+<child link="parafuso_13" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="suporte_placas_casco" type="fixed">
+<origin xyz="-4.77049e-18 -0.058608 -0.083" rpy="-3.14159 -3.69779e-32 4.16334e-17" />
+<parent link="casco" />
+<child link="suporte_placas" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="servo_flaps_suporte">
+<visual>
+<origin xyz="0.0536099 0.0479697 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo_flaps_suporte.stl"/>
+</geometry>
+<material name="servo_flaps_suporte_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.0536099 0.0479697 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo_flaps_suporte.stl"/>
+</geometry>
+<material name="servo_flaps_suporte_material">
+<color rgba="0.917647 0.917647 0.917647 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0141958 0.0480162 -0.0175081" rpy="0 0 0"/>
+<mass value="0.012976" />
+<inertia ixx="1.67316e-05" ixy="2.62812e-08"  ixz="-8.41245e-07" iyy="5.07657e-06" iyz="-7.57805e-09" izz="1.80627e-05" />
+</inertial>
+</link>
+
+<link name="servo">
+<visual>
+<origin xyz="-0.024 -0.005 0" rpy="-3.14159 2.65557e-31 -7.00649e-46" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo.stl"/>
+</geometry>
+<material name="servo_material">
+<color rgba="0.0980392 0.0980392 0.0980392 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.024 -0.005 0" rpy="-3.14159 2.65557e-31 -7.00649e-46" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo.stl"/>
+</geometry>
+<material name="servo_material">
+<color rgba="0.0980392 0.0980392 0.0980392 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0242408 -0.00500004 0.00218624" rpy="0 0 0"/>
+<mass value="0.0696558" />
+<inertia ixx="7.99816e-06" ixy="-2.81708e-11"  ixz="-2.04986e-07" iyy="1.6346e-05" iyz="1.35799e-11" izz="1.38219e-05" />
+</inertial>
+</link>
+
+<link name="parafuso_14">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.46519e-32 -3.9443e-31" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.46519e-32 -3.9443e-31" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-3.18457e-39"  ixz="-1.86893e-40" iyy="8.3343e-09" iyz="-1.02728e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_3_servo_1" type="fixed">
+<origin xyz="-0.048 -0.01 -0.00245" rpy="6.61396e-15 1.24345e-14 1.5708" />
+<parent link="servo" />
+<child link="parafuso_14" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_15">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 1.09476e-46 1.36627e-44" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 1.09476e-46 1.36627e-44" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="4.10913e-40"  ixz="-9.70115e-55" iyy="8.3343e-09" iyz="-5.03113e-41" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_4_servo_1" type="fixed">
+<origin xyz="-0.048 -6.93889e-18 -0.00245" rpy="6.61396e-15 1.24345e-14 1.5708" />
+<parent link="servo" />
+<child link="parafuso_15" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_16">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -1.2326e-32 7.00649e-45" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -1.2326e-32 7.00649e-45" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-1.43819e-39"  ixz="1.21291e-40" iyy="8.3343e-09" iyz="2.42659e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_5_servo_1" type="fixed">
+<origin xyz="-1.38778e-17 -6.93889e-18 -0.00245" rpy="6.61493e-15 1.2379e-14 1.5708" />
+<parent link="servo" />
+<child link="parafuso_16" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_17">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.18953e-47 1.47136e-44" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.18953e-47 1.47136e-44" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="4.10913e-40"  ixz="3.12138e-55" iyy="8.3343e-09" iyz="-2.05456e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_6_servo_1" type="fixed">
+<origin xyz="0 -0.01 -0.00245" rpy="6.61396e-15 1.24345e-14 1.5708" />
+<parent link="servo" />
+<child link="parafuso_17" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="servo_1_suporte" type="fixed">
+<origin xyz="-0.042769 0.0244329 -0.025986" rpy="-1.5708 2.16937e-29 -3.14159" />
+<parent link="servo_flaps_suporte" />
+<child link="servo" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="servo_2">
+<visual>
+<origin xyz="-0.024 0.005 0" rpy="3.14159 1.97058e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo.stl"/>
+</geometry>
+<material name="servo_material">
+<color rgba="0.0980392 0.0980392 0.0980392 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.024 0.005 0" rpy="3.14159 1.97058e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo.stl"/>
+</geometry>
+<material name="servo_material">
+<color rgba="0.0980392 0.0980392 0.0980392 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0242408 0.00499996 0.00218624" rpy="0 0 0"/>
+<mass value="0.0696558" />
+<inertia ixx="7.99816e-06" ixy="-2.81708e-11"  ixz="-2.04986e-07" iyy="1.6346e-05" iyz="1.35799e-11" izz="1.38219e-05" />
+</inertial>
+</link>
+
+<link name="parafuso_18">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-3.6977e-56"  ixz="6.22096e-87" iyy="8.3343e-09" iyz="-3.31299e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_3_servo_2" type="fixed">
+<origin xyz="2.77556e-17 0.01 -0.00245" rpy="-8.8401e-19 4.93038e-32 1.5708" />
+<parent link="servo_2" />
+<child link="parafuso_18" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_19">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-3.6977e-56"  ixz="6.22096e-87" iyy="8.3343e-09" iyz="-3.31299e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="sup_paraf_4_servo_2" type="fixed">
+<origin xyz="2.77556e-17 1.38778e-17 -0.00245" rpy="-8.8401e-19 4.93038e-32 1.5708" />
+<parent link="servo_2" />
+<child link="parafuso_19" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_20">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-3.6977e-56"  ixz="6.22096e-87" iyy="8.3343e-09" iyz="-3.31299e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_5_servo_2" type="fixed">
+<origin xyz="-0.048 0.01 -0.00245" rpy="-8.8401e-19 4.93038e-32 1.5708" />
+<parent link="servo_2" />
+<child link="parafuso_20" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_21">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.09476e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-3.6977e-56"  ixz="6.22096e-87" iyy="8.3343e-09" iyz="-3.31299e-40" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_6_servo_2" type="fixed">
+<origin xyz="-0.048 1.38778e-17 -0.00245" rpy="-8.8401e-19 4.93038e-32 1.5708" />
+<parent link="servo_2" />
+<child link="parafuso_21" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="servo_2_suporte" type="fixed">
+<origin xyz="-0.042769 0.0715064 -0.025986" rpy="1.5708 -1.77494e-30 -3.14159" />
+<parent link="servo_flaps_suporte" />
+<child link="servo_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_22">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_1_servo_sup" type="fixed">
+<origin xyz="-0.00111848 0.0960592 -0.006" rpy="0 -0 0" />
+<parent link="servo_flaps_suporte" />
+<child link="parafuso_22" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_23">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_2_servo_sup" type="fixed">
+<origin xyz="0 0 -0.006" rpy="0 -0 0" />
+<parent link="servo_flaps_suporte" />
+<child link="parafuso_23" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="peso_l">
+<visual>
+<origin xyz="0.0174426 -0.00735752 -0.02" rpy="-1.47273e-89 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peso_l.stl"/>
+</geometry>
+<material name="peso_l_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.0174426 -0.00735752 -0.02" rpy="-1.47273e-89 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peso_l.stl"/>
+</geometry>
+<material name="peso_l_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.0095 -0.007 -0.01" rpy="0 0 0"/>
+<!--mass value="1.5054" /-->
+<mass value="0.5054" />
+<inertia ixx="2.51015e-05" ixy="0"  ixz="0" iyy="3.20508e-05" iyz="-8.17508e-94" izz="2.3459e-05" />
+</inertial>
+</link>
+
+<joint name="peso_l_joint" type="fixed">
+<origin xyz="-0.0021405 0.051103 -0.00273007" rpy="-3.14159 -1.5708 0" />
+<parent link="servo_flaps_suporte" />
+<child link="peso_l" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="peso_r">
+<visual>
+<origin xyz="0.015946 -0.02 -0.00526076" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peso_r.stl"/>
+</geometry>
+<material name="peso_r_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0.015946 -0.02 -0.00526076" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/peso_r.stl"/>
+</geometry>
+<material name="peso_r_material">
+<color rgba="0.615686 0.811765 0.929412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.007 -0.01 -0.0095" rpy="0 0 0"/>
+<!--mass value="0.38304" /-->
+<mass value="0.38304" />
+<inertia ixx="2.42911e-05" ixy="0"  ixz="0" iyy="1.77794e-05" iyz="0" izz="1.90243e-05" />
+</inertial>
+</link>
+
+<joint name="peso_r_joint" type="fixed">
+<origin xyz="-0.0021405 0.0448363 -0.00273007" rpy="-1.5708 -0 -1.5708" />
+<parent link="servo_flaps_suporte" />
+<child link="peso_r" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="suporte_servo_casco" type="fixed">
+<origin xyz="-0.0536099 0.0479697 -0.083" rpy="3.14159 -0 0" />
+<parent link="casco" />
+<child link="servo_flaps_suporte" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="suporte_servo_rudder">
+<visual>
+<origin xyz="-0.0642875 -0.0528449 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_servo_rudder.stl"/>
+</geometry>
+<material name="suporte_servo_rudder_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0642875 -0.0528449 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_servo_rudder.stl"/>
+</geometry>
+<material name="suporte_servo_rudder_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="0.0101754 -0.0512961 -0.00750556" rpy="0 0 0"/>
+<mass value="0.00438075" />
+<inertia ixx="2.42847e-06" ixy="-6.60475e-09"  ixz="7.33763e-08" iyy="6.15752e-07" iyz="4.17437e-09" izz="2.52086e-06" />
+</inertial>
+</link>
+
+<link name="parafuso_24">
+<visual>
+<origin xyz="0 -6.93889e-18 -0.003" rpy="-1.5708 -0 1.2326e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.93889e-18 -0.003" rpy="-1.5708 -0 1.2326e-32" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 -6.73851e-18 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="1.15569e-40"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_1_sup_servo_rud" type="fixed">
+<origin xyz="-7.3145e-10 -0.103739 -0.002" rpy="0 -0 -1.66533e-16" />
+<parent link="suporte_servo_rudder" />
+<child link="parafuso_24" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_25">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.54074e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 1.54074e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="2.5682e-41"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_2_sup_servo_rud" type="fixed">
+<origin xyz="-9.29812e-16 -3.33067e-16 -0.002" rpy="0 -0 -1.5708" />
+<parent link="suporte_servo_rudder" />
+<child link="parafuso_25" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="servo_3">
+<visual>
+<origin xyz="2.1684e-18 0 -0.021" rpy="3.14159 -0 -4.3432e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo.stl"/>
+</geometry>
+<material name="servo_material">
+<color rgba="0.0980392 0.0980392 0.0980392 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="2.1684e-18 0 -0.021" rpy="3.14159 -0 -4.3432e-47" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/servo.stl"/>
+</geometry>
+<material name="servo_material">
+<color rgba="0.0980392 0.0980392 0.0980392 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.000240838 -3.98091e-08 -0.0188138" rpy="0 0 0"/>
+<mass value="0.0696558" />
+<inertia ixx="7.99816e-06" ixy="-2.81708e-11"  ixz="-2.04986e-07" iyy="1.6346e-05" iyz="1.35799e-11" izz="1.38219e-05" />
+</inertial>
+</link>
+
+<link name="parafuso_26">
+<visual>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -3.08149e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -3.08149e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.48083e-18 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-8.98871e-41"  ixz="-9.1523e-73" iyy="8.3343e-09" iyz="4.3931e-71" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_3_servo_rud" type="fixed">
+<origin xyz="0.024 0.005 -0.02345" rpy="-7.50404e-29 -2.89906e-29 3.14159" />
+<parent link="servo_3" />
+<child link="parafuso_26" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_27">
+<visual>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.48083e-18 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-8.98871e-41"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_4_servo_rud" type="fixed">
+<origin xyz="0.024 -0.005 -0.02345" rpy="-7.50404e-29 -2.89906e-29 3.14159" />
+<parent link="servo_3" />
+<child link="parafuso_27" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_28">
+<visual>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.48083e-18 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-8.98871e-41"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_5_servo_rud" type="fixed">
+<origin xyz="-0.024 0.005 -0.02345" rpy="-7.50404e-29 -2.89906e-29 3.14159" />
+<parent link="servo_3" />
+<child link="parafuso_28" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_29">
+<visual>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-3.46945e-18 0 -0.003" rpy="-1.5708 -0 -9.24446e-33" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-3.48083e-18 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="-8.98871e-41"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_6_servo_rud" type="fixed">
+<origin xyz="-0.024 -0.005 -0.02345" rpy="-7.50404e-29 -2.89906e-29 3.14159" />
+<parent link="servo_3" />
+<child link="parafuso_29" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="servo_rudder_suporte" type="fixed">
+<origin xyz="0.0128747 -0.0511478 -0.001" rpy="-7.50404e-29 -2.89906e-29 1.5708" />
+<parent link="suporte_servo_rudder" />
+<child link="servo_3" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="servo_rudder_casco" type="fixed">
+<origin xyz="0.0536099 0.0518697 -0.083" rpy="3.14159 -0 3.14159" />
+<parent link="casco" />
+<child link="suporte_servo_rudder" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="tampa_casco">
+<visual>
+<origin xyz="-0.18516 -2.38777e-18 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/tampa_casco.stl"/>
+</geometry>
+<material name="tampa_casco_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.18516 -2.38777e-18 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/tampa_casco.stl"/>
+</geometry>
+<material name="tampa_casco_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.18827 -2.85852e-06 -0.0233936" rpy="0 0 0"/>
+<mass value="0.308655" />
+<inertia ixx="0.000633722" ixy="5.76116e-07"  ixz="-9.49251e-06" iyy="0.00300896" iyz="6.74069e-08" izz="0.00356384" />
+</inertial>
+</link>
+
+<link name="suporte_dome">
+<visual>
+<origin xyz="-2.77556e-17 2.15974e-18 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_dome.stl"/>
+</geometry>
+<material name="suporte_dome_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-2.77556e-17 2.15974e-18 0" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_dome.stl"/>
+</geometry>
+<material name="suporte_dome_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.27065e-17 -3.85186e-34 -0.0125" rpy="0 0 0"/>
+<mass value="0.00776665" />
+<inertia ixx="2.55296e-06" ixy="0"  ixz="0" iyy="2.55296e-06" iyz="0" izz="4.2969e-06" />
+</inertial>
+</link>
+
+<link name="dome">
+<visual>
+<origin xyz="0 1.53081e-18 0.005" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/dome.stl"/>
+</geometry>
+<material name="dome_material">
+<color rgba="0.603922 0.647059 0.686275 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 1.53081e-18 0.005" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/dome.stl"/>
+</geometry>
+<material name="dome_material">
+<color rgba="0.603922 0.647059 0.686275 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-2.88613e-18 -9.62965e-33 -0.0225028" rpy="0 0 0"/>
+<mass value="0.0109214" />
+<inertia ixx="4.46048e-06" ixy="0"  ixz="0" iyy="4.46048e-06" iyz="0" izz="5.46494e-06" />
+</inertial>
+</link>
+
+<joint name="dome_suporte_dome" type="fixed">
+<origin xyz="-2.77556e-17 6.28934e-19 -0.025" rpy="0 -0 0" />
+<parent link="suporte_dome" />
+<child link="dome" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="suporte_dome_tampa_casco" type="fixed">
+<origin xyz="-0.0599504 -4.54751e-18 -0.028" rpy="0 -0 0" />
+<parent link="tampa_casco" />
+<child link="suporte_dome" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_30">
+<visual>
+<origin xyz="0 -1.53081e-19 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -1.53081e-19 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 4.73042e-20 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_1_tamp_casco" type="fixed">
+<origin xyz="-0.373912 -2.54085e-18 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_30" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_31">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_2_tamp_casco" type="fixed">
+<origin xyz="-0.340336 0.0304093 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_31" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_32">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_4_tamp_casco" type="fixed">
+<origin xyz="-0.237187 0.0717371 -0.005" rpy="9.86076e-32 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_32" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_33">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_5_tamp_casco" type="fixed">
+<origin xyz="-0.18516 0.0756 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_33" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_34">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_6_tamp_casco" type="fixed">
+<origin xyz="-0.133133 0.0717371 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_34" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_35">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_8_tamp_casco" type="fixed">
+<origin xyz="-0.0279641 0.0282561 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_35" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_36">
+<visual>
+<origin xyz="0 -1.53081e-19 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -1.53081e-19 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 4.73042e-20 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_9_tamp_casco" type="fixed">
+<origin xyz="0 -2.54085e-18 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_36" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_37">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_10_tamp_casco" type="fixed">
+<origin xyz="-0.0279641 -0.0282993 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_37" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_38">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_12_tamp_casco" type="fixed">
+<origin xyz="-0.133133 -0.0717371 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_38" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_39">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_13_tamp_casco" type="fixed">
+<origin xyz="-0.18516 -0.0756 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_39" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_40">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_14_tamp_casco" type="fixed">
+<origin xyz="-0.237187 -0.0717371 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_40" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_41">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="0" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="paraf_16_tamp_casco" type="fixed">
+<origin xyz="-0.340336 -0.0304693 -0.005" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="parafuso_41" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="suporte_camera">
+<visual>
+<origin xyz="1.55666e-05 -0.0201614 0.0439004" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_camera.stl"/>
+</geometry>
+<material name="suporte_camera_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.55666e-05 -0.0201614 0.0439004" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_camera.stl"/>
+</geometry>
+<material name="suporte_camera_material">
+<color rgba="0.647059 0.647059 0.647059 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.61568e-05 -0.0206255 0.0213152" rpy="0 0 0"/>
+<mass value="0.00750784" />
+<inertia ixx="3.69721e-06" ixy="-9.13889e-11"  ixz="1.06625e-10" iyy="3.99093e-06" iyz="5.70672e-07" izz="1.0162e-06" />
+</inertial>
+</link>
+
+<link name="caixa_camera">
+<visual>
+<origin xyz="-0.03 0.002 0" rpy="-1.5708 2.62743e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/caixa_camera.stl"/>
+</geometry>
+<material name="caixa_camera_material">
+<color rgba="0.298039 0.298039 0.298039 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.03 0.002 0" rpy="-1.5708 2.62743e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/caixa_camera.stl"/>
+</geometry>
+<material name="caixa_camera_material">
+<color rgba="0.298039 0.298039 0.298039 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0142778 -0.0145627 -0.00761908" rpy="0 0 0"/>
+<mass value="0.0174008" />
+<inertia ixx="1.62376e-06" ixy="-4.68436e-08"  ixz="4.71351e-08" iyy="1.54073e-06" iyz="1.12974e-07" izz="1.35121e-06" />
+</inertial>
+</link>
+
+<link name="parafuso_42">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 7.8823e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 7.8823e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="-6.56935e-54" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="parafuso_1_camera" type="fixed">
+<origin xyz="0 -0.028 -0.0016" rpy="0 5.55112e-17 0" />
+<parent link="caixa_camera" />
+<child link="parafuso_42" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_43">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.62743e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.62743e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="-2.18978e-54" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="parafuso_2_camera" type="fixed">
+<origin xyz="-0.028 -0.028 -0.0016" rpy="0 2.62743e-46 0" />
+<parent link="caixa_camera" />
+<child link="parafuso_43" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_44">
+<visual>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.62743e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 0 -0.003" rpy="-1.5708 2.62743e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="-2.18978e-54" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="parafuso_3_camera" type="fixed">
+<origin xyz="-0.028 0 -0.0016" rpy="0 2.62743e-46 0" />
+<parent link="caixa_camera" />
+<child link="parafuso_44" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_45">
+<visual>
+<origin xyz="1.73472e-18 0 -0.003" rpy="-1.5708 -2.46519e-32 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="1.73472e-18 0 -0.003" rpy="-1.5708 -2.46519e-32 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="1.72334e-18 2.00385e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="0"  ixz="1.6833e-40" iyy="8.3343e-09" iyz="0" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="parafuso_4_camera" type="fixed">
+<origin xyz="0 0 -0.0016" rpy="0 1.11022e-16 0" />
+<parent link="caixa_camera" />
+<child link="parafuso_45" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="camera_link">
+<visual>
+<origin xyz="3.38813e-21 0 -0.001" rpy="-1.5708 4.59801e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/camera_link.stl"/>
+</geometry>
+<material name="camera_link_material">
+<color rgba="0.980392 0.796078 0.262745 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="3.38813e-21 0 -0.001" rpy="-1.5708 4.59801e-46 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/camera_link.stl"/>
+</geometry>
+<material name="camera_link_material">
+<color rgba="0.980392 0.796078 0.262745 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="3.38813e-21 2.54278e-19 -0.0005" rpy="0 0 0"/>
+<mass value="3.27934e-05" />
+<inertia ixx="8.4081e-11" ixy="0"  ixz="-6.00342e-56" iyy="8.4081e-11" iyz="0" izz="1.62696e-10" />
+</inertial>
+</link>
+
+<joint name="camera_link_camera" type="fixed">
+<origin xyz="-0.014 -0.014 -0.02335" rpy="0 1.57 0" />
+<parent link="caixa_camera" />
+<child link="camera_link" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="camera_suporte_camera" type="fixed">
+<origin xyz="-0.0139844 -0.0271614 0.0594559" rpy="1.5708 -0 -3.14159" />
+<parent link="suporte_camera" />
+<child link="caixa_camera" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="parafuso_46">
+<visual>
+<origin xyz="0 -6.91749e-20 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -6.91749e-20 -0.003" rpy="-1.5708 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/parafuso.stl"/>
+</geometry>
+<material name="parafuso_material">
+<color rgba="0.901961 0.878431 0.811765 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.13848e-20 1.3121e-19 0.0013074" rpy="0 0 0"/>
+<mass value="0.000637784" />
+<inertia ixx="8.3343e-09" ixy="1.00365e-54"  ixz="9.1523e-73" iyy="8.3343e-09" iyz="-8.24366e-57" izz="1.50601e-09" />
+</inertial>
+</link>
+
+<joint name="parafuso_5_suporte_camera" type="fixed">
+<origin xyz="7.67271e-18 1.38778e-17 -0.007" rpy="0 -0 1.5708" />
+<parent link="suporte_camera" />
+<child link="parafuso_46" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="suporte_tampa_casco" type="fixed">
+<origin xyz="-0.0912971 5.35411e-18 -0.025" rpy="3.14159 -0 -1.5708" />
+<parent link="tampa_casco" />
+<child link="suporte_camera" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="apc220">
+<visual>
+<origin xyz="-0.0375 0.00425 0.0053208" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/apc220.stl"/>
+</geometry>
+<material name="apc220_material">
+<color rgba="1 0.929412 0.129412 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-0.0375 0.00425 0.0053208" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/apc220.stl"/>
+</geometry>
+<material name="apc220_material">
+<color rgba="1 0.929412 0.129412 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-0.0101371 0.00101558 -0.0137598" rpy="0 0 0"/>
+<mass value="0.0330289" />
+<inertia ixx="1.28148e-05" ixy="1.04575e-06"  ixz="6.06524e-06" iyy="2.18441e-05" iyz="-6.049e-07" izz="9.81161e-06" />
+</inertial>
+</link>
+
+<joint name="apc220_tampa" type="fixed">
+<origin xyz="-0.325369 -2.75413e-17 -0.025" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="apc220" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="seringa">
+<visual>
+<origin xyz="-1.31714e-19 -0.0678199 0.0452272" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/seringa.stl"/>
+</geometry>
+<material name="seringa_material">
+<color rgba="0 0 0.5 0.1"/>
+</material>
+</visual>
+<collision>
+<origin xyz="-1.31714e-19 -0.0678199 0.0452272" rpy="3.14159 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/seringa.stl"/>
+</geometry>
+<material name="seringa_material">
+<color rgba="0 0 0.5 0.1"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-8.30483e-10 0.0525 -0.0251" rpy="0 0 0"/>
+<mass value="0.636173" />
+<!--mass value="0" /-->
+<inertia ixx="0.00193029" ixy="1.11467e-11"  ixz="-1.68477e-10" iyy="0.00219279" iyz="8.64491e-11" izz="0.0039265" />
+</inertial>
+</link>
+
+<joint name="seringas_tampa" type="fixed">
+<origin xyz="-0.18516 0.0525 -0.041" rpy="0 -0 3.14159" />
+<parent link="tampa_casco" />
+<child link="seringa" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="suporte_seringas">
+<visual>
+<origin xyz="0 -0.2 0.026" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_seringas.stl"/>
+</geometry>
+<material name="suporte_seringas_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -0.2 0.026" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_seringas.stl"/>
+</geometry>
+<material name="suporte_seringas_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.34541e-16 -0.138885 0.0269522" rpy="0 0 0"/>
+<mass value="1.59689e-07" />
+<inertia ixx="1.3339e-09" ixy="0"  ixz="0" iyy="9.03603e-11" iyz="-5.91307e-12" izz="1.33013e-09" />
+</inertial>
+</link>
+
+<joint name="suporte_seringa_1" type="fixed">
+<origin xyz="-0.28516 0.0525 -0.04" rpy="3.14159 -0 -1.5708" />
+<parent link="tampa_casco" />
+<child link="suporte_seringas" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<link name="suporte_seringas_2">
+<visual>
+<origin xyz="0 -0.2 0.026" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_seringas.stl"/>
+</geometry>
+<material name="suporte_seringas_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</visual>
+<collision>
+<origin xyz="0 -0.2 0.026" rpy="0 -0 0" />
+<geometry>
+<mesh filename="package://mergulhao/meshes/suporte_seringas.stl"/>
+</geometry>
+<material name="suporte_seringas_material">
+<color rgba="0.980392 0.713725 0.00392157 1.0"/>
+</material>
+</collision>
+<inertial>
+<origin xyz="-1.34541e-16 -0.138885 0.0269522" rpy="0 0 0"/>
+<mass value="1.59689e-07" />
+<inertia ixx="1.3339e-09" ixy="0"  ixz="0" iyy="9.03603e-11" iyz="-5.91307e-12" izz="1.33013e-09" />
+</inertial>
+</link>
+
+<joint name="suporte_seringa_2" type="fixed">
+<origin xyz="-0.28516 -0.0525 -0.04" rpy="3.14159 -0 -1.5708" />
+<parent link="tampa_casco" />
+<child link="suporte_seringas_2" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+<joint name="tampa_casco" type="fixed">
+<origin xyz="-0.185162 2.38777e-18 0" rpy="3.14159 -0 3.14159" />
+<parent link="casco" />
+<child link="tampa_casco" />
+<axis xyz="0 0 1"/>
+<limit effort="1" velocity="20" />
+<joint_properties friction="0.0"/>
+</joint>
+
+
+</robot>
